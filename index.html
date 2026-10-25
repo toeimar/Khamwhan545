@@ -1261,20 +1261,34 @@
 
         async function saveStoreSettings(event) {
             event.preventDefault();
-            storeInfo.name = document.getElementById('admin-store-name').value;
-            storeInfo.logo = document.getElementById('admin-store-logo').value;
-            storeInfo.address = document.getElementById('admin-store-address').value;
-            storeInfo.phone = document.getElementById('admin-store-phone').value;
-            storeInfo.line = document.getElementById('admin-store-line').value;
-            storeInfo.contactLink = document.getElementById('admin-store-contactlink').value;
-            storeInfo.mapEmbed = document.getElementById('admin-store-map').value;
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังบันทึก...';
 
-            if (window.saveStoreInfoToFirebase) {
-                await window.saveStoreInfoToFirebase(storeInfo);
+                storeInfo.name = document.getElementById('admin-store-name').value;
+                storeInfo.logo = document.getElementById('admin-store-logo').value;
+                storeInfo.address = document.getElementById('admin-store-address').value;
+                storeInfo.phone = document.getElementById('admin-store-phone').value;
+                storeInfo.line = document.getElementById('admin-store-line').value;
+                storeInfo.contactLink = document.getElementById('admin-store-contactlink').value;
+                storeInfo.mapEmbed = document.getElementById('admin-store-map').value;
+
+                if (window.saveStoreInfoToFirebase) {
+                    await window.saveStoreInfoToFirebase(storeInfo);
+                }
+
+                renderStoreInfo();
+                showToast('อัปเดตข้อมูลร้านค้าเรียบร้อยแล้ว');
+            } catch (err) {
+                console.error("Save store error:", err);
+                showToast('เกิดข้อผิดพลาดในการบันทึกข้อมูล (ไฟล์ภาพอาจใหญ่เกินไป)', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
             }
-
-            renderStoreInfo();
-            showToast('อัปเดตข้อมูลร้านค้าเรียบร้อยแล้ว');
         }
 
         async function changeAdminPin(event) {
@@ -1308,9 +1322,45 @@
         function handleLogoUpload(event) {
             const file = event.target.files[0];
             if (file) {
+                if (file.size > 5 * 1024 * 1024) { // Warning if > 5MB
+                    showToast('ไฟล์มีขนาดใหญ่เกินไป กรุณาใช้รูปที่มีขนาดเล็กกว่า 5MB', 'error');
+                    return;
+                }
+                
+                // Compress & Resize Image to fit Firestore 1MB limits safely
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('admin-store-logo').value = e.target.result;
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 400;
+                        const MAX_HEIGHT = 400;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('canvas');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Compress to WebP / JPEG format with quality 0.8
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        document.getElementById('admin-store-logo').value = compressedDataUrl;
+                        showToast('อัปโหลดและปรับขนาดโลโก้เรียบร้อย');
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -1319,9 +1369,44 @@
         function handleLeftProductUpload(event) {
             const file = event.target.files[0];
             if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('ไฟล์มีขนาดใหญ่เกินไป กรุณาใช้รูปที่มีขนาดเล็กกว่า 5MB', 'error');
+                    return;
+                }
+
+                // Compress & Resize Product Image
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('left-product-image').value = e.target.result;
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('canvas');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        document.getElementById('left-product-image').value = compressedDataUrl;
+                        showToast('อัปโหลดและปรับขนาดรูปสินค้าเรียบร้อย');
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
