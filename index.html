@@ -150,7 +150,7 @@
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.error("Firebase Auth Error:", err);
+                console.error("Firebase Auth Error:", err); alert('เชื่อมต่อ Firebase ไม่สำเร็จ: ' + (err.code || err.message));
             }
 
             onAuthStateChanged(auth, (user) => {
