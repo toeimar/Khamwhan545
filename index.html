@@ -1352,7 +1352,7 @@
 
                         canvas.width = width;
                         canvas.height = height;
-                        const ctx = canvas.getContext('canvas');
+                        const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         
                         // Compress to WebP / JPEG format with quality 0.8
@@ -1399,7 +1399,7 @@
 
                         canvas.width = width;
                         canvas.height = height;
-                        const ctx = canvas.getContext('canvas');
+                        const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
                         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
