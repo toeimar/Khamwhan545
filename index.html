@@ -865,9 +865,9 @@
             adminPin: '123456'
         };
 
-        let categories = defaultCategories;
-        let products = defaultProducts;
-        let storeInfo = defaultStoreInfo;
+        window.categories = [...defaultCategories];
+        window.products = [...defaultProducts];
+        window.storeInfo = { ...defaultStoreInfo };
         let activeCategoryTarget = null;
 
         window.defaultCategories = defaultCategories;
@@ -1433,6 +1433,10 @@
             }, 3000);
         }
 
+        window.addEventListener('unhandledrejection', function(e) {
+    const r = e.reason || {};
+    showToast('บันทึกไม่สำเร็จ: ' + (r.code || r.message || r), 'error');
+});
         window.saveProduct = saveProduct;
         window.deleteProduct = deleteProduct;
         window.saveCategory = saveCategory;
