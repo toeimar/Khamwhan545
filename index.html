@@ -176,7 +176,8 @@
                 if (!document.getElementById('view-admin').classList.contains('hidden')) {
                     window.renderAdminProducts();
                 }
-            }, (error) => console.error("Products listener error:", error));
+            }, (error) => { console.error(error); alert('อ่านข้อมูลไม่ได้: ' + error.code); }
+);
 
             // Listen to Categories Collection
             const categoriesRef = collection(db, 'artifacts', appId, 'public', 'data', 'categories');
