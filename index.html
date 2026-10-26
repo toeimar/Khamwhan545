@@ -1224,7 +1224,9 @@
             const name = document.getElementById('left-category-name-input').value.trim();
             const oldId = document.getElementById('left-category-old-id').value;
 
-            const catData = { id: newId, name: name };
+            let order = parseInt(document.getElementById('left-category-order-input').value, 10);
+if (isNaN(order)) order = categories.length + 1;
+const catData = { id: newId, name: name, order: order };
 
             if (oldId && oldId !== newId) {
                 if (window.deleteCategoryFromFirebase) await window.deleteCategoryFromFirebase(oldId);
