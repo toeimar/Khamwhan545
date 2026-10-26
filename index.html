@@ -1017,8 +1017,8 @@ function galleryGo(d) { showGalleryImage(galleryIndex + d); }
                         mainContentHtml += `
                             <div class="luxury-card rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col justify-between cursor-pointer" onclick="openDetailModal('${prod.id}')">
                                 <div>
-                                    <div class="relative h-44 sm:h-52 overflow-hidden bg-champagne-100">
-                                        <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='https://placehold.co/600x400/F4EFE6/473A21?text=Khamwhan545'">
+                                    relative bg-champagne-100
+                                        <img src="${imagesOf(prod)[0] || ''}" alt="${prod.name}" class="w-full h-auto block" onerror="this.src='https://placehold.co/600x400/F4EFE6/473A21?text=Khamwhan545'">
                                         ${prod.badge ? `<span class="absolute top-3 right-3 gold-gradient text-white text-[10px] uppercase font-semibold tracking-wider px-3 py-1 rounded-full shadow-xs">${prod.badge}</span>` : ''}
                                     </div>
                                     <div class="p-4 sm:p-5 space-y-2">
