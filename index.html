@@ -490,13 +490,16 @@
 
                             <div>
                                 <label class="block text-[11px] font-medium uppercase tracking-wider text-champagne-800 mb-1">รูปภาพสินค้า (URL หรือ อัปโหลด)</label>
-                                <div class="flex gap-2">
-                                    <input type="text" id="left-product-image" required class="flex-grow px-3.5 py-2 rounded-xl border border-rosegold/60 text-xs focus:outline-none focus:border-gold bg-champagne-50/30" placeholder="https://...">
-                                    <button type="button" onclick="document.getElementById('left-product-file').click()" class="px-3 py-2 rounded-xl bg-rosegold-light text-champagne-800 hover:bg-rosegold text-xs uppercase font-medium flex-shrink-0 border border-rosegold">
-                                        <i class="fa-solid fa-upload"></i>
-                                    </button>
-                                    <input type="file" id="left-product-file" accept="image/*" class="hidden" onchange="handleLeftProductUpload(event)">
-                                </div>
+                                <div>
+    <label class="block text-[11px] font-medium uppercase tracking-wider text-champagne-800 mb-1">รูปภาพสินค้า (สูงสุด 5 รูป · แตะรูปเพื่อตั้งเป็นรูปหลัก)</label>
+    <div id="left-product-thumbs" class="flex flex-wrap gap-2 mb-2"></div>
+    <div class="flex gap-2">
+        <input type="text" id="left-product-image-url" class="flex-grow px-3.5 py-2 rounded-xl border border-rosegold/60 text-xs focus:outline-none focus:border-gold bg-champagne-50/30" placeholder="วางลิงก์รูป แล้วกดเพิ่ม">
+        <button type="button" onclick="addImageUrl()" class="px-3 py-2 rounded-xl bg-rosegold-light text-champagne-800 text-xs font-medium flex-shrink-0 border border-rosegold">เพิ่ม</button>
+        <button type="button" onclick="document.getElementById('left-product-file').click()" class="px-3 py-2 rounded-xl bg-rosegold-light text-champagne-800 text-xs flex-shrink-0 border border-rosegold"><i class="fa-solid fa-upload"></i></button>
+        <input type="file" id="left-product-file" accept="image/*" multiple class="hidden" onchange="handleLeftProductUpload(event)">
+    </div>
+</div>
                             </div>
 
                             <div>
