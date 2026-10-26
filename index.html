@@ -528,9 +528,9 @@
                             <input type="hidden" id="left-category-old-id">
                             
                             <div>
-                                <label class="block text-[11px] font-medium uppercase tracking-wider text-champagne-800 mb-1">รหัสหมวดหมู่ (ID เช่น cat1)</label>
-                                <input type="text" id="left-category-id-input" required class="w-full px-3.5 py-2 rounded-xl border border-rosegold/60 text-xs focus:outline-none focus:border-gold bg-champagne-50/30" placeholder="cat1">
-                            </div>
+    <label class="block text-[11px] font-medium uppercase tracking-wider text-champagne-800 mb-1">ลำดับการแสดงผล (เลขน้อยแสดงก่อน)</label>
+    <input type="number" id="left-category-order-input" min="1" class="w-full px-3.5 py-2 rounded-xl border border-rosegold/60 text-xs focus:outline-none focus:border-gold bg-champagne-50/30" placeholder="เช่น 1, 2, 3">
+</div>
 
                             <div>
                                 <label class="block text-[11px] font-medium uppercase tracking-wider text-champagne-800 mb-1">ชื่อหมวดหมู่</label>
@@ -670,7 +670,7 @@
                         <div class="p-4 sm:p-5 border-b border-champagne-100 flex justify-between items-center bg-gradient-to-r from-white via-champagne-50/40 to-rosegold-light/20">
                             <div>
                                 <h4 class="font-luxury text-base font-semibold text-champagne-900">ตารางหมวดหมู่สินค้า</h4>
-                                <p class="text-[11px] text-champagne-600">จัดการชื่อและรหัสหมวดหมู่</p>
+                                <p class="text-[11px] text-champagne-600">จัดการชื่อและลำดับการแสดงผลของหมวดหมู่</p>
                             </div>
                             <button onclick="resetCategoryForm()" class="px-3 py-1.5 rounded-full gold-gradient text-white text-[11px] font-medium shadow-2xs">
                                 <i class="fa-solid fa-plus mr-1"></i> เพิ่มหมวดหมู่
@@ -682,7 +682,7 @@
                                     <tr>
                                         <th class="p-3">ลำดับ</th>
                                         <th class="p-3">ชื่อหมวดหมู่</th>
-                                        <th class="p-3">รหัส (ID)</th>
+                                         <th class="p-3">ลำดับแสดงผล</th>
                                         <th class="p-3 text-center">จัดการ</th>
                                     </tr>
                                 </thead>
@@ -1123,7 +1123,7 @@
                 <tr class="hover:bg-champagne-50/70 transition">
                     <td class="p-3 text-champagne-500 font-light">${index + 1}</td>
                     <td class="p-3 font-medium text-champagne-900">${c.name}</td>
-                    <td class="p-3 text-champagne-600 font-mono text-[11px]">${c.id}</td>
+                    <td class="p-3 text-champagne-600 text-[11px]">${catOrder(c)}</td>
                     <td class="p-3 text-center space-x-1 whitespace-nowrap">
                         <button onclick="editCategory('${c.id}')" class="px-2.5 py-1 rounded-md bg-champagne-100 text-champagne-800 hover:bg-rosegold-light transition text-[11px] border border-rosegold/30"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button onclick="deleteCategory('${c.id}')" class="px-2.5 py-1 rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition text-[11px] border border-red-200"><i class="fa-solid fa-trash"></i></button>
