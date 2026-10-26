@@ -1221,6 +1221,8 @@ function galleryGo(d) { showGalleryImage(galleryIndex + d); }
             document.getElementById('left-product-form').reset();
             document.getElementById('left-product-id').value = '';
             document.getElementById('panel-product-title').innerText = 'เพิ่มรายการสินค้าใหม่';
+editImages = [];
+renderThumbs();
         }
 
         function editProduct(productId) {
@@ -1231,7 +1233,8 @@ function galleryGo(d) { showGalleryImage(galleryIndex + d); }
                 document.getElementById('left-product-category').value = p.category;
                 document.getElementById('left-product-price').value = p.price;
                 document.getElementById('left-product-badge').value = p.badge || '';
-                document.getElementById('left-product-image').value = p.image;
+                editImages = [...imagesOf(p)];
+renderThumbs();
                 document.getElementById('left-product-description').value = p.description || '';
                 document.getElementById('panel-product-title').innerText = 'แก้ไขรายการสินค้า';
             }
@@ -1239,14 +1242,16 @@ function galleryGo(d) { showGalleryImage(galleryIndex + d); }
 
         async function saveProduct(event) {
             event.preventDefault();
-            const id = document.getElementById('left-product-id').value || ('p_' + Date.now());
+            if (!editImages.length) { showToast('กรุณาเพิ่มรูปสินค้าอย่างน้อย 1 รูป', 'error'); return; }
+const id = document.getElementById('left-product-id').value || ('p_' + Date.now());
             const productData = {
                 id: id,
                 name: document.getElementById('left-product-name').value,
                 category: document.getElementById('left-product-category').value,
                 price: document.getElementById('left-product-price').value,
                 badge: document.getElementById('left-product-badge').value,
-                image: document.getElementById('left-product-image').value,
+                image: editImages[0] || '',
+images: [...editImages],
                 description: document.getElementById('left-product-description').value
             };
 
