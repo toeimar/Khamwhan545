@@ -1220,7 +1220,7 @@
 
         async function saveCategory(event) {
             event.preventDefault();
-            const newId = document.getElementById('left-category-id-input').value.trim();
+            document.getElementById('left-category-order-input').value = catOrder(c);
             const name = document.getElementById('left-category-name-input').value.trim();
             const oldId = document.getElementById('left-category-old-id').value;
 
