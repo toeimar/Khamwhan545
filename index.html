@@ -183,7 +183,7 @@
             const categoriesRef = collection(db, 'artifacts', appId, 'public', 'data', 'categories');
             onSnapshot(categoriesRef, (snapshot) => {
                 if (!snapshot.empty) {
-                    window.categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    window.categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort(window.byCatOrder);
                 } else {
                     window.seedDefaultCategories();
                 }
