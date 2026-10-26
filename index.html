@@ -873,6 +873,78 @@
         window.products = [...defaultProducts];
         window.storeInfo = { ...defaultStoreInfo };
         let activeCategoryTarget = null;
+        let editImages = [];
+const MAX_IMAGES = 5;
+let galleryImages = [], galleryIndex = 0;
+
+function catOrder(c) {
+    if (typeof c.order === 'number') return c.order;
+    const n = parseInt(c.name, 10);
+    return isNaN(n) ? 999 : n;
+}
+function byCatOrder(a, b) {
+    return catOrder(a) - catOrder(b) || String(a.name).localeCompare(String(b.name), 'th');
+}
+window.byCatOrder = byCatOrder;
+
+function imagesOf(p) {
+    return (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+}
+
+function renderThumbs() {
+    document.getElementById('left-product-thumbs').innerHTML = editImages.map((u, i) => `
+        <div class="relative w-16 h-16 flex-shrink-0">
+            <img src="${u}" onclick="setMainImage(${i})" class="w-16 h-16 rounded-lg object-cover cursor-pointer border-2 ${i === 0 ? 'border-gold' : 'border-rosegold/40'}">
+            ${i === 0 ? '<span class="absolute bottom-0 left-0 right-0 text-center text-[9px] gold-gradient rounded-b-md">หลัก</span>' : ''}
+            <button type="button" onclick="removeImage(${i})" class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] leading-none">×</button>
+        </div>`).join('');
+}
+
+function setMainImage(i) { editImages.unshift(...editImages.splice(i, 1)); renderThumbs(); }
+function removeImage(i) { editImages.splice(i, 1); renderThumbs(); }
+
+function addImageUrl() {
+    const input = document.getElementById('left-product-image-url');
+    const u = input.value.trim();
+    if (!u) return;
+    if (editImages.length >= MAX_IMAGES) { showToast('ใส่ได้สูงสุด 5 รูป', 'error'); return; }
+    editImages.push(u);
+    input.value = '';
+    renderThumbs();
+}
+
+function resizeToDataUrl(file, max, q) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = e => {
+            const img = new Image();
+            img.onerror = reject;
+            img.onload = () => {
+                const k = Math.min(1, max / Math.max(img.width, img.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(img.width * k);
+                canvas.height = Math.round(img.height * k);
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', q));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function showGalleryImage(i) {
+    galleryIndex = (i + galleryImages.length) % (galleryImages.length || 1);
+    document.getElementById('gallery-main').src = galleryImages[galleryIndex] || '';
+    document.getElementById('gallery-thumbs').innerHTML = galleryImages.length > 1 ? galleryImages.map((u, k) =>
+        `<img src="${u}" onclick="showGalleryImage(${k})" class="w-14 h-14 rounded-lg object-cover flex-shrink-0 cursor-pointer border-2 ${k === galleryIndex ? 'border-gold' : 'border-transparent opacity-70'}">`).join('') : '';
+}
+function galleryGo(d) { showGalleryImage(galleryIndex + d); }
+
 
         window.defaultCategories = defaultCategories;
         window.defaultProducts = defaultProducts;
