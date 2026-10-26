@@ -1449,13 +1449,19 @@ const catData = { id: newId, name: name, order: order };
             }
         }
 
-        function handleLeftProductUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('ไฟล์มีขนาดใหญ่เกินไป กรุณาใช้รูปที่มีขนาดเล็กกว่า 5MB', 'error');
-                    return;
-                }
+        async function handleLeftProductUpload(event) {
+    const files = Array.from(event.target.files);
+    for (const file of files) {
+        if (editImages.length >= MAX_IMAGES) { showToast('ใส่ได้สูงสุด 5 รูป', 'error'); break; }
+        try {
+            editImages.push(await resizeToDataUrl(file, 700, 0.72));
+            renderThumbs();
+        } catch (e) {
+            showToast('อ่านรูปไม่สำเร็จ', 'error');
+        }
+    }
+    event.target.value = '';
+}
 
                 // Compress & Resize Product Image
                 const reader = new FileReader();
